@@ -38,7 +38,7 @@ for(lag in lags){
   mean.dX[i]=mean(diff(X))
   var.dX[i]=var(diff(X))
   tau[i]=mean(diff(ts))
-  weights[i]=length(sub_idx)^0.5
+  weights[i]=length(sub_idx)^0.999
   i=i+1
 }
 
@@ -52,13 +52,15 @@ source("./step_stats.R")
 #
 fit.mean<-lm(mean.dX ~ tau -1,data=stats)
 summary(fit.mean)
-#fit variance
+#fit variance: some ad hoc initial guesses
 sigma0<-sqrt(0.5*var.dX[1])##initial guess for noise 
 v0<-as.numeric(coef(fit.mean)["tau"])
 A0<-mean(var.dX[1:5])/v0^2;
 k0<-1.0
 B0<-1.0
+#
 #NLS fit:
+#
 fit.rv<-nls( RV.dX ~ var.model( tau, A, B, k ), 
               data=stats, 
               start=list(A=A0,B=B0,k=k0),
@@ -72,7 +74,7 @@ cat(filename)
 cat('\n')
 cat(sprintf('size:=%d, max_lag:=%d',N,max_lag))
 cat('\n')
-
+#exctract paramters:
 k<-summary(fit.rv)$coefficients[3,1]
 B<-summary(fit.rv)$coefficients[2,1]
 B.stderr<-summary(fit.rv)$coefficients[2,2]

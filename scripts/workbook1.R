@@ -94,8 +94,6 @@ cat('\n')
 
 
 k<-summary(fit.rv)$coefficients[3,1]
-#pmo<-summary(fit.rv)$coefficients[2,1]*k^2
-#pmo.stderr<-summary(fit.rv)$coefficients[2,2]*k^2
 B<-summary(fit.rv)$coefficients[2,1]
 B.stderr<-summary(fit.rv)$coefficients[2,2]
 A<-summary(fit.rv)$coefficients[1,1]
