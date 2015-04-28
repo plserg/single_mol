@@ -16,7 +16,7 @@ filename='../data0/sdcate9T.lt'
 #filename='../data0/sdcate8T.lt'#bad force stability?
 filename='../data0/sdcate6T.lt'
 #filename='../data0/sdcate5BT.lt'
-#filename='../data0/sdcate5AT_2.lt'
+filename='../data0/sdcate5AT_2.lt'
 D<-read.table(filename,header=F)
 
 #preprocess the data slightely 
@@ -93,7 +93,7 @@ cov<-vcov(fit.rv)
 sigma_noise<-sqrt(0.5*abs(A)*V^2)
 
 cat(sprintf("PMO: %f %f\n",pmo,pmo.stderr))
-cat(sprintf("PO: %f  %f\n",1.0-nu,nu.stderr/nu*(1.0-nu)))
+cat(sprintf("PO: %f  %f\n",1.0-nu,nu.stderr))
 cat(sprintf("V:  %f  %f\n",V,V.stderr[1]))
 cat(sprintf("Vmax:  %f %f\n",Vmax, Vmax*nu.stderr))
 

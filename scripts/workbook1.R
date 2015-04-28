@@ -112,7 +112,7 @@ cov<-vcov(fit.rv)
 sigma_noise<-sqrt(0.5*abs(A)*V^2)
 
 cat(sprintf("PMO: %f %f\n",pmo,pmo.stderr))
-cat(sprintf("PO: %f  %f\n",1.0-nu,nu.stderr/nu*(1.0-nu)))
+cat(sprintf("PO: %f  %f\n",1.0-nu,nu.stderr))
 cat(sprintf("V:  %f  %f\n",V,V.stderr[1]))
 cat(sprintf("Vmax:  %f %f\n",Vmax, Vmax*nu.stderr))
 
