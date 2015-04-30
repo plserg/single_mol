@@ -15,9 +15,9 @@ savePlot2 <- function(plt,subplt, outfile) {
 #filename='../data/15-3A1_10.7pN_First_nucleotides.dat'
 filename='../data/16-3E1_10.2pN_First_nucleotides.dat'
 #filename='../data/18-2B1_8.1pN_First_nucleotides.dat'
-#filename='../data/17-3E1_9.1pN_First_nucleotides.dat'
-#filename='../data/18-2C1_9.5pN_First_nucleotides.dat'
-#filename='../data/20-2_9.9pN_First_nucleotides.dat'
+filename='../data/17-3E1_9.1pN_First_nucleotides.dat'
+filename='../data/18-2C1_9.5pN_First_nucleotides.dat'
+filename='../data/20-2_9.9pN_First_nucleotides.dat'
 #filename='../data/19-2K1_8.2pN_First_nucleotides.dat'
 #filename='../data/19-2G1_10pN_First_nucleotides.dat'
 #filename='../data/19-2I1_10pN_First_nucleotides.dat'
@@ -35,14 +35,14 @@ filename='../data/16-3E1_10.2pN_First_nucleotides.dat'
 #filename='../data/20-2E2_10.1pN_First_nucleotides.dat'
 #filename='../data/20-2H2_8.9pN_First_nucleotides.dat'
 #filename='../data/19-2L2_11.8pN_First_nucleotides.dat'
-filename='../data/18-2A1_10.1pN_First_nucleotides.dat'
+#filename='../data/18-2A1_10.1pN_First_nucleotides.dat'
 D<-read.table(filename,header=F)
 
 #preprocess the data slightely 
 colnames(D)<-c("time","x","force")
 N<-length(D$time)#number of points
-max_lag<-floor(N/20.0)
-lags<-seq(2,max_lag,5)
+max_lag<-floor(N/40.0)
+lags<-seq(5,max_lag,5)
 
 mean.dX<-array()
 var.dX<-array()
@@ -76,7 +76,7 @@ sigma0<-sqrt(0.5*var.dX[1])##initial guess for noise
 v0<-as.numeric(coef(fit.mean)["tau"])
 A0<-mean(var.dX[1:5])/v0^2;
 k0<-0.5
-B0<-1.0
+B0<-10.0
 #NLS fit:
 fit.rv<-nls( RV.dX ~ var.model( tau, A, B, k ), 
               data=stats, 
