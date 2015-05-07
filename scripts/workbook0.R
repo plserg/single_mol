@@ -76,6 +76,7 @@ cat(sprintf('size:=%d, max_lag:=%d',N,max_lag))
 cat('\n')
 #exctract paramters:
 k<-summary(fit.rv)$coefficients[3,1]
+k.stderr<-summary(fit.rv)$coefficients[3,2]
 B<-summary(fit.rv)$coefficients[2,1]
 B.stderr<-summary(fit.rv)$coefficients[2,2]
 A<-summary(fit.rv)$coefficients[1,1]
@@ -91,14 +92,36 @@ V.stderr <- sqrt(diag(vcov(fit.mean)))[1]
 cov<-vcov(fit.rv)
 ##noise amplitude
 sigma_noise<-sqrt(0.5*abs(A)*V^2)
-
+PL<-(1.0+pmo)/k
+PF<-nu*k*pmo/(1.0+pmo)
+##I/O:
 cat(sprintf("PMO: %f %f\n",pmo,pmo.stderr))
 cat(sprintf("PO: %f  %f\n",1.0-nu,nu.stderr))
-cat(sprintf("V:  %f  %f\n",V,V.stderr[1]))
-cat(sprintf("Vmax:  %f %f\n",Vmax, Vmax*nu.stderr))
+cat(sprintf("V:  %f  %f\n",V,V.stderr))
+cat(sprintf("Vmax:  %f %f\n",Vmax, Vmax.stderr))
+cat(sprintf("pause-length(sec)=%2.4f\n",PL))
+cat(sprintf("pause-freq(1/sec):=%2.4f\n",PF))
 
-cat(sprintf("pause-length(sec)=%2.4f\n",(1.0+pmo)/k))
-cat(sprintf("pause-freq(1/sec):=%2.4f\n",nu*k*pmo/(1.0+pmo)))
+##create a summary data frame:
+summary_info<-data.frame(file=filename,
+                         V=sprintf("%f (%2.4f)",V,V.stderr),
+                         Vmax=sprintf("%f (%2.4f)",Vmax,Vmax.stderr),
+                         PO=sprintf("%f(%2.4f)",1.0-nu,nu.stderr),
+                         PMO=sprintf("%f(%2.4f)",pmo,pmo.stderr),
+                         k=sprintf("%f(%2.4f)",k,k.stderr),
+                         PL=sprintf("%f",PL),
+                         PF=sprintf("%f",PF),
+                         size=sprintf("%d",N));
+#append to the sammary file:
+write.table(summary_info,
+            file="../summary_phi29.csv",
+            append=TRUE,
+            sep=",",
+            col.names=FALSE,
+            row.names=FALSE,
+            quote=FALSE);
+
+
 
 #basic plots
 library(ggplot2)

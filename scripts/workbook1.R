@@ -112,13 +112,13 @@ cov<-vcov(fit.rv)
 ##noise amplitude
 sigma_noise<-sqrt(0.5*abs(A)*V^2)
 Vmax.stderr<-Vmax*nu.stderr/nu
-V.stderr<-V.stderr[1]
+
 PL<-(1.0+pmo)/k
 PF<-nu*k*pmo/(1.0+pmo)
 ##I/O:
 cat(sprintf("PMO: %f %f\n",pmo,pmo.stderr))
 cat(sprintf("PO: %f  %f\n",1.0-nu,nu.stderr))
-cat(sprintf("V:  %f  %f\n",V,V.stderr[1]))
+cat(sprintf("V:  %f  %f\n",V,V.stderr))
 cat(sprintf("Vmax:  %f %f\n",Vmax, Vmax.stderr))
 cat(sprintf("pause-length(sec)=%2.4f\n",PL))
 cat(sprintf("pause-freq(1/sec):=%2.4f\n",PF))
