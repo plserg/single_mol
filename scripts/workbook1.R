@@ -33,7 +33,7 @@ filename='../data/20-2_9.9pN_First_nucleotides.dat'
 #filename='../data/19-2L1_12.6pN_First_nucleotides.dat'
 #filename='../data/20-2M2_11.3pN_First_nucleotides.dat'
 #filename='../data/20-2E2_10.1pN_First_nucleotides.dat'
-#filename='../data/20-2H2_8.9pN_First_nucleotides.dat'
+filename='../data/20-2H2_8.9pN_First_nucleotides.dat'
 #filename='../data/19-2L2_11.8pN_First_nucleotides.dat'
 #filename='../data/18-2A1_10.1pN_First_nucleotides.dat'
 D<-read.table(filename,header=F)
@@ -94,6 +94,7 @@ cat('\n')
 
 
 k<-summary(fit.rv)$coefficients[3,1]
+k.stderr<-summary(fit.rv)$coefficients[3,2]
 B<-summary(fit.rv)$coefficients[2,1]
 B.stderr<-summary(fit.rv)$coefficients[2,2]
 A<-summary(fit.rv)$coefficients[1,1]
@@ -110,14 +111,36 @@ V.stderr <- sqrt(diag(vcov(fit.mean)))[1]
 cov<-vcov(fit.rv)
 ##noise amplitude
 sigma_noise<-sqrt(0.5*abs(A)*V^2)
-
+Vmax.stderr<-Vmax*nu.stderr/nu
+V.stderr<-V.stderr[1]
+PL<-(1.0+pmo)/k
+PF<-nu*k*pmo/(1.0+pmo)
+##I/O:
 cat(sprintf("PMO: %f %f\n",pmo,pmo.stderr))
 cat(sprintf("PO: %f  %f\n",1.0-nu,nu.stderr))
 cat(sprintf("V:  %f  %f\n",V,V.stderr[1]))
-cat(sprintf("Vmax:  %f %f\n",Vmax, Vmax*nu.stderr))
+cat(sprintf("Vmax:  %f %f\n",Vmax, Vmax.stderr))
+cat(sprintf("pause-length(sec)=%2.4f\n",PL))
+cat(sprintf("pause-freq(1/sec):=%2.4f\n",PF))
 
-cat(sprintf("pause-length(sec)=%2.4f\n",(1.0+pmo)/k))
-cat(sprintf("pause-freq(1/sec):=%2.4f\n",nu*k*pmo/(1.0+pmo)))
+##create a summary data frame:
+summary_info<-data.frame(file=filename,
+                 V=sprintf("%f (%2.4f)",V,V.stderr),
+                 Vmax=sprintf("%f (%2.4f)",Vmax,Vmax.stderr),
+                 PO=sprintf("%f(%2.4f)",1.0-nu,nu.stderr),
+                 PMO=sprintf("%f(%2.4f)",pmo,pmo.stderr),
+                 k=sprintf("%f(%2.4f)",k,k.stderr),
+                 PL=sprintf("%f",PL),
+                 PF=sprintf("%f",PF),
+                 size=sprintf("%d",N));
+#append to the sammary file:
+write.table(summary_info,
+            file="../summary.csv",
+            append=TRUE,
+            sep=",",
+            col.names=FALSE,
+            row.names=FALSE,
+            quote=FALSE);
 
 #basic plots
 library(ggplot2)
